@@ -29,3 +29,5 @@ func take_damage(amount: float) -> void:
 		
 func die() -> void:
 	queue_free()
+func _draw() -> void:
+	draw_circle(Vector2.ZERO, 12.0, Color.RED)

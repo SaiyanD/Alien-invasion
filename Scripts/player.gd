@@ -1,5 +1,6 @@
 extends CharacterBody2D
 
+const BULLET_SCENE= preload("res://Scenes/bullet.tscn")
 const SPEED = 150.0
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 
@@ -49,3 +50,32 @@ func update_animation(dir: Vector2) -> void:
 			sprite.play("Front_idle")
 		elif sprite.animation == "Back_run":
 			sprite.play("Back_idle")
+
+
+func _on_shoot_timer_timeout() -> void:
+	var enemies = get_tree().get_nodes_in_group("enemies")
+	
+	if enemies.is_empty():
+		return
+	
+	var nearest_enemy:Node2D = null
+	var nearest_distance = INF
+	
+	for enemy in enemies:
+		if enemy is Node2D:
+			var distance = global_position.distance_squared_to(enemy.global_position)
+			
+			if distance < nearest_distance:
+				nearest_distance = distance
+				nearest_enemy = enemy
+	
+	if nearest_enemy == null:
+		return
+	
+	var bullet = BULLET_SCENE.instantiate()
+	get_tree().current_scene.add_child(bullet)
+	
+	bullet.global_position = $BulletSpawn. global_position
+	
+	var direction = (nearest_enemy.global_position - bullet.global_position).normalized()
+	bullet.set("direction", direction)

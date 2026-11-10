@@ -419,7 +419,7 @@ animations = [{
 radius = 3.0
 height = 22.0
 
-[node name="Player" type="CharacterBody2D" unique_id=1614889973]
+[node name="Player" type="CharacterBody2D" unique_id=1614889973 groups=["player"]]
 script = ExtResource("1_x3wgy")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1831754585]
@@ -429,3 +429,13 @@ animation = &"Back_Diagonal_run"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1299016451]
 texture_filter = 1
 shape = SubResource("CapsuleShape2D_l2ajj")
+
+[node name="BulletSpawn" type="Marker2D" parent="." unique_id=425046404]
+
+[node name="ShootTimer" type="Timer" parent="." unique_id=1392354159]
+wait_time = 0.7
+autostart = true
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=492886304]
+
+[connection signal="timeout" from="ShootTimer" to="." method="_on_shoot_timer_timeout"]
