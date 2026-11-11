@@ -1,15 +1,28 @@
 extends CharacterBody2D
 
 const BULLET_SCENE= preload("res://Scenes/bullet.tscn")
+
 const SPEED = 150.0
+
+@export var max_health: float = 100.0
+
+var health: float
+
+var damage_cooldown: float = 0.0
+
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 
-func _physics_process(_delta: float) -> void:
+func _ready() -> void:
+	health = max_health
+
+
+func _physics_process(delta: float) -> void:
 	var direction := Input.get_vector("left", "right", "up", "down")
 	velocity = direction * SPEED
 	move_and_slide()
-
 	update_animation(direction)
+	if damage_cooldown > 0:
+		damage_cooldown -= delta
 
 func update_animation(dir: Vector2) -> void:
 	#This is to flip the sprite left or right
@@ -79,3 +92,15 @@ func _on_shoot_timer_timeout() -> void:
 	
 	var direction = (nearest_enemy.global_position - bullet.global_position).normalized()
 	bullet.set("direction", direction)
+
+func take_damage(amount: float) -> void:
+	if damage_cooldown > 0:
+		return
+	
+	health -= amount
+	
+	damage_cooldown = 0.8
+	
+	
+	if health <=0:
+		print("Player defeated!")
