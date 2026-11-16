@@ -3,8 +3,10 @@ extends CharacterBody2D
 const BULLET_SCENE= preload("res://Scenes/bullet.tscn")
 
 const SPEED = 150.0
+@onready var health_bar: ProgressBar = $UI/HealthBar
 
 @export var max_health: float = 100.0
+
 
 var health: float
 
@@ -13,6 +15,9 @@ var damage_cooldown: float = 0.0
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 
 func _ready() -> void:
+	health_bar.min_value = 0.0
+	health_bar.max_value= max_health
+	health_bar.value = health_bar.max_value
 	health = max_health
 
 
@@ -97,7 +102,10 @@ func take_damage(amount: float) -> void:
 	if damage_cooldown > 0:
 		return
 	
-	health -= amount
+	health = clampf(health - amount,0.0,max_health)
+	
+	health_bar.value = health
+	
 	
 	damage_cooldown = 0.8
 	
