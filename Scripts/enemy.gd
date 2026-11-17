@@ -1,9 +1,8 @@
 extends CharacterBody2D
 
-@onready var health_bar: ProgressBar = $UI/HealthBar
 
 
-@export var health: float = 100.0
+@export var health: float = 30.0
 @export var speed: float = 80.0
 @export var damage:float = 10.0
 @export var xp_reward: int =5
@@ -62,8 +61,9 @@ func _physics_process(delta: float) -> void:
 			
 			
 func take_damage(amount: float) -> void:
-		if health <= 0:
-			die()
+	health -= amount
+	if health <= 0:
+		die()
 		
 func die() -> void:
 	queue_free()
